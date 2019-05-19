@@ -1,0 +1,15 @@
+CREATE OR REPLACE PROCEDURE findRooms(idHotel int) AS
+ CURSOR lista_camere IS SELECT tip,pret FROM camere WHERE id_hotel=idHotel;
+   v_tip camere.tip%type;       
+   v_pret camere.pret%type;
+
+BEGIN
+    OPEN lista_camere;
+    LOOP
+        FETCH lista_camere INTO v_tip,v_pret;
+        EXIT WHEN lista_camere%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(v_tip||' '|| v_pret);
+    END LOOP;
+    CLOSE lista_camere; 
+    END findRooms;
+/
