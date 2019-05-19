@@ -1,0 +1,15 @@
+CREATE OR REPLACE PROCEDURE findHotelsByCity(oras varchar) IS
+   CURSOR lista_hoteluri IS SELECT nume_hotel,stele,nota FROM hoteluri WHERE nume_oras=oras;
+   v_numeHotel hoteluri.nume_hotel%type;       
+   v_stele hoteluri.stele%type;
+   v_nota hoteluri.nota%type;
+BEGIN
+    OPEN lista_hoteluri;
+    LOOP
+        FETCH lista_hoteluri INTO v_numeHotel,v_stele,v_nota;
+        EXIT WHEN lista_hoteluri%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(v_numeHotel||' '|| v_stele||' '||v_nota);
+    END LOOP;
+    CLOSE lista_hoteluri; 
+    END findHotelsByCity;
+/
