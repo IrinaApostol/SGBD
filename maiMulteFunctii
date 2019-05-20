@@ -1,0 +1,122 @@
+CREATE OR REPLACE PROCEDURE POPULATE_CLIENTI(v_idClient IN int,v_name IN VARCHAR2,v_prenume IN VARCHAR2,v_email IN VARCHAR2,v_parola IN VARCHAR2) AS
+BEGIN
+  insert into clienti (id_client,nume,prenume,email,parola) values (v_idClient,v_name,v_prenume,v_email,v_parola);
+END POPULATE_CLIENTI;
+/
+
+
+
+
+CREATE OR REPLACE PROCEDURE POPULATE_REZERVARI(v_numarCamera int,v_idHotel int,v_idClient int,v_checkin DATE,v_checkout DATE) AS
+BEGIN
+insert into rezervari values (v_numarCamera,v_idHotel,v_idClient,v_checkin,v_checkout);
+END POPULATE_REZERVARI;
+/
+
+
+CREATE OR REPLACE PROCEDURE findHotelsByCity(oras varchar) IS
+   CURSOR lista_hoteluri IS SELECT nume_hotel,stele,nota FROM hoteluri WHERE nume_oras=oras;
+   v_numeHotel hoteluri.nume_hotel%type;       
+   v_stele hoteluri.stele%type;
+   v_nota hoteluri.nota%type;
+BEGIN
+    OPEN lista_hoteluri;
+    LOOP
+        FETCH lista_hoteluri INTO v_numeHotel,v_stele,v_nota;
+        EXIT WHEN lista_hoteluri%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(v_numeHotel||' '|| v_stele||' '||v_nota);
+    END LOOP;
+    CLOSE lista_hoteluri; 
+    END findHotelsByCity;
+/
+
+
+
+CREATE OR REPLACE PROCEDURE findRooms(idHotel int) AS
+ CURSOR lista_camere IS SELECT tip,pret FROM camere WHERE id_hotel=idHotel;
+   v_tip camere.tip%type;       
+   v_pret camere.pret%type;
+
+BEGIN
+    OPEN lista_camere;
+    LOOP
+        FETCH lista_camere INTO v_tip,v_pret;
+        EXIT WHEN lista_camere%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(v_tip||' '|| v_pret);
+    END LOOP;
+    CLOSE lista_camere;
+    END findRooms;
+/
+
+
+CREATE OR REPLACE FUNCTION pretMediuPeOras(numeOras varchar) RETURN float AS
+CURSOR pret_camere IS select c.pret from camere c join hoteluri h on c.id_hotel=h.id_hotel where h.nume_oras=numeOras; 
+   v_pret camere.pret%type;
+    v_medie float;
+    v_suma int;
+    v_count int;
+BEGIN
+v_count:=0;
+v_suma:=0;
+    OPEN pret_camere;
+    LOOP
+        FETCH pret_camere INTO v_pret;
+        EXIT WHEN pret_camere%NOTFOUND;
+        v_count:=v_count+1;
+        v_suma:=v_suma+v_pret;
+        --DBMS_OUTPUT.PUT_LINE(v_suma);
+    END LOOP;
+    CLOSE pret_camere;
+    v_medie:=v_suma/v_count;
+    return v_medie;
+END;
+/
+CREATE OR REPLACE FUNCTION pretMediuPeHotel(numeHotel varchar) RETURN float AS
+CURSOR pretMediu_hotel IS select c.pret from camere c join hoteluri h on c.id_hotel=h.id_hotel where h.nume_hotel=numeHotel;
+v_pret camere.pret%type;
+    v_medie float;
+    v_suma int;
+    v_count int;
+BEGIN
+v_count:=0;
+v_suma:=0;
+    OPEN pretMediu_hotel;
+    LOOP
+        FETCH pretMediu_hotel INTO v_pret;
+        EXIT WHEN pretMediu_hotel%NOTFOUND;
+        v_count:=v_count+1;
+        v_suma:=v_suma+v_pret;
+        --DBMS_OUTPUT.PUT_LINE(v_suma);
+    END LOOP;
+    CLOSE pretMediu_hotel;
+    v_medie:=v_suma/v_count;
+    return v_medie;
+END;
+/
+CREATE OR REPLACE PROCEDURE hoteluriCuPretIntre2Valori(pret1 int, pret2 int) AS
+CURSOR hoteluri_intre2valori IS select nume_hotel,nume_oras,stele,nota from hoteluri h join camere c on c.id_hotel=h.id_hotel where c.pret>=pret1 and c.pret<=pret2;
+v_nume hoteluri.nume_hotel%type;
+    v_oras hoteluri.nume_oras%type;
+    v_stea hoteluri.stele%type;
+    v_note hoteluri.nota%type;
+BEGIN
+    OPEN hoteluri_intre2valori;
+    LOOP
+        FETCH hoteluri_intre2valori INTO v_nume,v_oras,v_stea,v_note;
+        EXIT WHEN hoteluri_intre2valori%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(v_nume||' '||v_oras||' '||v_stea||' '||v_note);
+    END LOOP;
+    CLOSE hoteluri_intre2valori;
+END;
+/
+CREATE OR REPLACE PROCEDURE anulareRezervare(idClient int) AS
+v_in DATE;
+BEGIN
+select check_in into v_in from rezervari where id_client=idClient;
+if(sysdate-v_in<=7) THEN
+DBMS_OUTPUT.PUT_LINE('NU SE POATE ANULA REZERVAREA!');
+ELSE
+DBMS_OUTPUT.PUT_LINE('REZERVARE ANULATA!');
+DELETE FROM REZERVARI WHERE ID_CLIENT=idClient;
+END IF;
+END;
