@@ -1,0 +1,162 @@
+DROP TABLE hoteluri CASCADE CONSTRAINTS
+/
+DROP TABLE camere CASCADE CONSTRAINTS
+/
+DROP TABLE facilitati CASCADE CONSTRAINTS
+/
+DROP TABLE clienti CASCADE CONSTRAINTS
+/
+DROP TABLE rezervari CASCADE CONSTRAINTS
+/
+
+clear screen;
+
+CREATE TABLE hoteluri (
+  id_hotel INT NOT NULL PRIMARY KEY,
+  nume_hotel VARCHAR2(40) NOT NULL,
+  nume_oras VARCHAR2(30) NOT NULL,
+  stele INT NOT NULL,
+  nota INT NOT NULL
+  
+  --created_at DATE,
+  --updated_at DATE
+)
+/
+CREATE TABLE clienti (
+  id_client INT NOT NULL,
+  nume VARCHAR2(15) NOT NULL,
+  prenume VARCHAR2(15) NOT NULL,
+  email VARCHAR2(40),
+  parola VARCHAR(25)
+
+  --created_at DATE,
+  --updated_at DATE
+)
+/
+
+CREATE TABLE camere (
+  numar_camera INT NOT NULL,
+  id_hotel INT NOT NULL,
+  tip VARCHAR2(15) NOT NULL,
+  pret NUMBER(6,2) NOT NULL,
+
+  --created_at DATE,
+  --updated_at DATE,
+  
+  primary key (numar_camera, id_hotel)
+)
+/
+
+CREATE TABLE rezervari (
+  numar_camera INT NOT NULL,
+  id_hotel INT NOT NULL,
+  id_client INT NOT NULL,
+  check_in DATE NOT NULL,
+  check_out DATE NOT NULL,
+
+  --created_at DATE,
+  --updated_at DATE,
+  
+  primary key (numar_camera, id_hotel)
+)
+
+/
+
+SET SERVEROUTPUT ON;
+
+
+DECLARE
+TYPE varr IS VARRAY(1000) OF varchar2(255);
+lista_orase varr :=varr('Iasi','Bucuresti','Timisoara','Cluj','Paris','Londra','Amsterdam','Atena','Roma','Venetia','Vatra-Dornei','Constanta','Brasov','Galati','Barlad','Bacau','Vaslui','Oradea','Arad','Braila','Mangalia','Fagaras','Gura Humorului','Botosani','Suceava');
+lista_hoteluri varr :=varr('Best Western Park','Unirea','International','Rin Grand','Independence','Cambodiada','Combo','Carol Park','Dacia','Metropol','Rossiya','Lotte','Arctic','Savoy','Golder Ring','Katerina','Grand','Royal');
+lista_tipCamera varr :=varr('dubla','tripla','apartamente','twin');
+lista_nume varr := varr('Ababei','Acasandrei','Adascalitei','Afanasie','Agafitei','Agape','Aioanei','Alexandrescu','Alexandru','Alexe','Alexii','Amarghioalei','Ambroci','Andonesei','Andrei','Andrian','Andrici','Andronic','Andros','Anghelina','Anita','Antochi','Antonie','Apetrei','Apostol','Arhip','Arhire','Arteni','Arvinte','Asaftei','Asofiei','Aungurenci','Avadanei','Avram','Babei','Baciu','Baetu','Balan','Balica','Banu','Barbieru','Barzu','Bazgan','Bejan','Bejenaru','Belcescu','Belciuganu','Benchea','Bilan','Birsanu','Bivol','Bizu','Boca','Bodnar','Boistean','Borcan','Bordeianu','Botezatu','Bradea','Braescu','Budaca','Bulai','Bulbuc-aioanei','Burlacu','Burloiu','Bursuc','Butacu','Bute','Buza','Calancea','Calinescu','Capusneanu','Caraiman','Carbune','Carp','Catana','Catiru','Catonoiu','Cazacu','Cazamir','Cebere','Cehan','Cernescu','Chelaru','Chelmu','Chelmus','Chibici','Chicos','Chilaboc','Chile','Chiriac','Chirila','Chistol','Chitic','Chmilevski','Cimpoesu','Ciobanu','Ciobotaru','Ciocoiu','Ciofu','Ciornei','Citea','Ciucanu','Clatinici','Clim','Cobuz','Coca','Cojocariu','Cojocaru','Condurache','Corciu','Corduneanu','Corfu','Corneanu','Corodescu','Coseru','Cosnita','Costan','Covatariu','Cozma','Cozmiuc','Craciunas','Crainiceanu','Creanga','Cretu','Cristea','Crucerescu','Cumpata','Curca','Cusmuliuc','Damian','Damoc','Daneliuc','Daniel','Danila','Darie','Dascalescu','Dascalu','Diaconu','Dima','Dimache','Dinu','Dobos','Dochitei','Dochitoiu','Dodan','Dogaru','Domnaru','Dorneanu','Dragan','Dragoman','Dragomir','Dragomirescu','Duceac','Dudau','Durnea','Edu','Eduard','Eusebiu','Fedeles','Ferestraoaru','Filibiu','Filimon','Filip','Florescu','Folvaiter','Frumosu','Frunza','Galatanu','Gavrilita','Gavriliuc','Gavrilovici','Gherase','Gherca','Ghergu','Gherman','Ghibirdic','Giosanu','Gitlan','Giurgila','Glodeanu','Goldan','Gorgan','Grama','Grigore','Grigoriu','Grosu','Grozavu','Gurau','Haba','Harabula','Hardon','Harpa','Herdes','Herscovici','Hociung','Hodoreanu','Hostiuc','Huma','Hutanu','Huzum','Iacob','Iacobuta','Iancu','Ichim','Iftimesei','Ilie','Insuratelu','Ionesei','Ionesi','Ionita','Iordache','Iordache-tiroiu','Iordan','Iosub','Iovu','Irimia','Ivascu','Jecu','Jitariuc','Jitca','Joldescu','Juravle','Larion','Lates','Latu','Lazar','Leleu','Leon','Leonte','Leuciuc','Leustean','Luca','Lucaci','Lucasi','Luncasu','Lungeanu','Lungu','Lupascu','Lupu','Macariu','Macoveschi','Maftei','Maganu','Mangalagiu','Manolache','Manole','Marcu','Marinov','Martinas','Marton','Mataca','Matcovici','Matei','Maties','Matrana','Maxim','Mazareanu','Mazilu','Mazur','Melniciuc-puica','Micu','Mihaela','Mihai','Mihaila','Mihailescu','Mihalachi','Mihalcea','Mihociu','Milut','Minea','Minghel','Minuti','Miron','Mitan','Moisa','Moniry-abyaneh','Morarescu','Morosanu','Moscu','Motrescu','Motroi','Munteanu','Murarasu','Musca','Mutescu','Nastaca','Nechita','Neghina','Negrus','Negruser','Negrutu','Nemtoc','Netedu','Nica','Nicu','Oana','Olanuta','Olarasu','Olariu','Olaru','Onu','Opariuc','Oprea','Ostafe','Otrocol','Palihovici','Pantiru','Pantiruc','Paparuz','Pascaru','Patachi','Patras','Patriche','Perciun','Perju','Petcu','Pila','Pintilie','Piriu','Platon','Plugariu','Podaru','Poenariu','Pojar','Popa','Popescu','Popovici','Poputoaia','Postolache','Predoaia','Prisecaru','Procop','Prodan','Puiu','Purice','Rachieru','Razvan','Reut','Riscanu','Riza','Robu','Roman','Romanescu','Romaniuc','Rosca','Rusu','Samson','Sandu','Sandulache','Sava','Savescu','Schifirnet','Scortanu','Scurtu','Sfarghiu','Silitra','Simiganoschi','Simion','Simionescu','Simionesei','Simon','Sitaru','Sleghel','Sofian','Soficu','Sparhat','Spiridon','Stan','Stavarache','Stefan','Stefanita','Stingaciu','Stiufliuc','Stoian','Stoica','Stoleru','Stolniceanu','Stolnicu','Strainu','Strimtu','Suhani','Tabusca','Talif','Tanasa','Teclici','Teodorescu','Tesu','Tifrea','Timofte','Tincu','Tirpescu','Toader','Tofan','Toma','Toncu','Trifan','Tudosa','Tudose','Tuduri','Tuiu','Turcu','Ulinici','Unghianu','Ungureanu','Ursache','Ursachi','Urse','Ursu','Varlan','Varteniuc','Varvaroi','Vasilache','Vasiliu','Ventaniuc','Vicol','Vidru','Vinatoru','Vlad','Voaides','Vrabie','Vulpescu','Zamosteanu','Zazuleac');
+lista_prenume varr := varr('Adrian','Alex','Alexandru','Alin','Andreas','Andrei','Aurelian','Benjamin','Bogdan','Camil','Catalin','Cezar','Ciprian','Claudiu','Codrin','Constantin','Corneliu','Cosmin','Costel','Cristian','Damian','Dan','Daniel','Danut','Darius','Denise','Dimitrie','Dorian','Dorin','Dragos','Dumitru','Eduard','Elvis','Emil','Ervin','Eugen','Eusebiu','Fabian','Filip','Florian','Florin','Gabriel','George','Gheorghe','Giani','Giulio','Iaroslav','Ilie','Ioan','Ion','Ionel','Ionut','Iosif','Irinel','Iulian','Iustin','Laurentiu','Liviu','Lucian','Marian','Marius','Matei','Mihai','Mihail','Nicolae','Nicu','Nicusor','Octavian','Ovidiu','Paul','Petru','Petrut','Radu','Rares','Razvan','Richard','Robert','Roland','Rolland','Romanescu','Sabin','Samuel','Sebastian','Sergiu','Silviu','Stefan','Teodor','Teofil','Theodor','Tudor','Vadim','Valentin','Valeriu','Vasile','Victor','Vlad','Vladimir','Vladut','Adina','Alexandra','Alina','Ana','Anca','Anda','Andra','Andreea','Andreia','Antonia','Bianca','Camelia','Claudia','Codrina','Cristina','Daniela','Daria','Delia','Denisa','Diana','Ecaterina','Elena','Eleonora','Elisa','Ema','Emanuela','Emma','Gabriela','Georgiana','Ileana','Ilona','Ioana','Iolanda','Irina','Iulia','Iuliana','Larisa','Laura','Loredana','Madalina','Malina','Manuela','Maria','Mihaela','Mirela','Monica','Oana','Paula','Petruta','Raluca','Sabina','Sanziana','Simina','Simona','Stefana','Stefania','Tamara','Teodora','Theodora','Vasilica','Xena');
+--lista_steleHotel varr:=varr('da','da','da','daw','dw');
+--lista_noteHotel varr:=varr('da','dsa','wq','wq','dwq','wq','as','sa','qq','ges');
+  v_nume VARCHAR2(255);
+  v_prenume VARCHAR2(255);
+  v_prenume1 VARCHAR2(255);
+  v_prenume2 VARCHAR2(255);
+  v_ID VARCHAR2(6);
+  v_email varchar2(40);
+  v_parola varchar2(40);
+  v_temp int;
+  v_nrCamera int;
+  v_tipCamera varchar2(15);
+  v_pretCamera int;
+  v_random int;
+  v_idHotel int;
+  v_idClient int;
+  v_numeHotel varchar2(255);
+  v_numarStele int;
+  v_notaHotel int;
+  v_numeOras varchar2(255);
+  v_checkin DATE;
+  v_checkout DATE;
+BEGIN
+
+   DBMS_OUTPUT.PUT_LINE('Inserarea a 1025 studenti...');
+   FOR v_i IN 1..20 LOOP
+
+      v_nume := lista_nume(TRUNC(DBMS_RANDOM.VALUE(0,lista_nume.count))+1);
+      v_prenume1 := lista_prenume(TRUNC(DBMS_RANDOM.VALUE(0,lista_prenume.count))+1);      
+
+      v_email := lower(v_nume ||'.'|| v_prenume1);
+      if (TRUNC(DBMS_RANDOM.VALUE(0,2))=0) then v_email := v_email ||'@gmail.com';
+         else v_email := v_email ||'@yahoo.com';
+      end if;
+
+     v_parola := 'parol';
+                      
+     insert into clienti values(v_i, v_nume, v_prenume1,v_email,v_parola);
+       END LOOP;
+       
+       
+       
+       
+       
+       
+      FOR v_i IN 1..1000000 LOOP
+      v_idHotel:=v_i;
+    v_numeHotel :=lista_hoteluri(TRUNC(DBMS_RANDOM.VALUE(0,lista_hoteluri.count))+1);  
+    v_numarStele :=TRUNC(DBMS_RANDOM.VALUE(1,5))+1;
+    v_notaHotel:=TRUNC(DBMS_RANDOM.VALUE(1,10))+1;
+    v_numeOras:=lista_orase(TRUNC(DBMS_RANDOM.VALUE(0,lista_orase.count))+1);
+
+    insert into hoteluri values(v_idHotel,v_numeHotel,v_numeOras,v_numarStele,v_notaHotel);
+    END LOOP;
+    
+    
+    
+    
+    FOR v_i IN 1..1000 LOOP
+    v_idHotel :=v_i;
+    v_nrCamera :=TRUNC(DBMS_RANDOM.VALUE(1,5))+1;
+    
+    v_tipCamera :=lista_tipCamera(TRUNC(DBMS_RANDOM.VALUE(0,lista_tipCamera.count))+1);
+    v_pretCamera := TRUNC(DBMS_RANDOM.VALUE(50, 500))+1;
+    
+    insert into camere values(v_nrCamera,v_idHotel,v_tipCamera,v_pretCamera);
+    
+      
+   END LOOP;
+   
+   
+   FOR v_i IN 1..100 LOOP
+   v_nrCamera:=v_i;
+   v_idHotel:=v_i;
+   v_random:=DBMS_RANDOM.VALUE(1,365);
+   v_checkin:=TO_DATE('01-01-1974','MM-DD-YYYY')+TRUNC(DBMS_RANDOM.VALUE(0,365));
+   v_checkout:=v_checkin+TRUNC(DBMS_RANDOM.VALUE(1,10));
+   
+   insert into rezervari values(v_nrCamera,v_idHotel,v_i,v_checkin, v_checkout);
+   
+   END LOOP;
+   DBMS_OUTPUT.PUT_LINE('Inserarea a 100 studenti... GATA !');
+   
+   
+   
+
+END;
+/
